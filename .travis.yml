@@ -4,3 +4,4 @@ install:
   - ansible-lint --version
 script:
   - ansible-lint azure_vm.yml
+  - ansible-lint var_resize.yml
