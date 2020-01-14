@@ -12,25 +12,25 @@
       resource_group: ansible-rg
       name: ansible-vnet
       address_prefixes: "10.0.0.0/16"
-  
+
   - name: Add subnet
     azure_rm_subnet:
       resource_group: ansible-rg
       name: ansible-subnet
       address_prefix: "10.0.1.0/24"
       virtual_network: ansible-vnet
-      
+
   - name: Create public IP address
     azure_rm_publicipaddress:
       resource_group: ansible-rg
       allocation_method: Static
       name: ansible-public-ip-{{ inventory_hostname }}
     register: output_ip_address
-    
+
   - name: Dump public IP for VM which will be created
     debug:
       msg: "The public IP is {{ output_ip_address.state.ip_address }}."
-      
+
   - name: Create Network Security Group that allows SSH
     azure_rm_securitygroup:
       resource_group: ansible-rg
@@ -42,7 +42,7 @@
           access: Allow
           priority: 1001
           direction: Inbound
-          
+
   - name: Create virtual network interface card
     azure_rm_networkinterface:
       resource_group: ansible-rg
@@ -51,7 +51,7 @@
       subnet: ansible-subnet
       public_ip_name: ansible-public-ip-{{ inventory_hostname }}
       security_group: ansible-net-security-group
-      
+
   - name: Create VM
     azure_rm_virtualmachine:
       resource_group: ansible-rg
@@ -68,4 +68,3 @@
         publisher: OpenLogic
         sku: '7.5'
         version: latest
-
