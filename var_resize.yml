@@ -1,6 +1,8 @@
 ###
-# initial source 
+# initial source
 ###
+---
+
 - name: Get dynamic host list
   hosts: localhost
   gather_facts: no
@@ -8,17 +10,21 @@
   tasks:
   - include: get-hosts-tasks.yml
 
-- hosts: centosservers
+- name: Gather facts
+  hosts: centosservers
   remote_user: azureuser
   gather_facts: no
   tasks:
-    - setup:
-        
+    - name: Trigger facts gather
+      setup:
+
 # Creates a dynamic inventory of hosts to be resized
-- hosts: localhost
+- name: Filter hosts to be resized
+  hosts: localhost
   gather_facts: no
   tasks:
-    - add_host:
+    - name: Buld hosts inventory to resize
+      add_host:
         groups: resize
         hostname: '{{ item }}'
         inventory_dir: "{{ hostvars[item].inventory_dir }}"
@@ -27,7 +33,7 @@
       vars:
         query: '[?mount == `/var` ] | [0].size_available'
 
-    - debug: 
+    - debug:
         msg: "{{ hostvars[item].ansible_mounts | json_query(query) }}"
       with_items: '{{ groups.centosservers }}'
       vars:
