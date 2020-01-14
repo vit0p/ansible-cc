@@ -63,8 +63,9 @@
         - path: /home/azureuser/.ssh/authorized_keys
           key_data: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
       network_interfaces: ansible-nic-{{ inventory_hostname }}
+      os_disk_size_gb: 110
       image:
-        offer: CentOS
+        offer: CentOS-LVM
         publisher: OpenLogic
-        sku: '7.5'
+        sku: '7-LVM'
         version: latest
