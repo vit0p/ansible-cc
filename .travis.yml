@@ -3,4 +3,4 @@ install:
   - pip install ansible-lint
   - ansible-lint --version
 script:
-  - ansible-lint azure_vm.yml
+  - ansible-lint azure_vm.yml get-hosts-tasks.yml
