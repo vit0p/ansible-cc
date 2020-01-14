@@ -1,0 +1,20 @@
+- name: Get dynamic host list
+  hosts: localhost
+  connection: local
+  tasks:
+  - include: get-hosts-tasks.yml
+
+
+- name: Run command
+  hosts: centosservers
+  remote_user: azureuser
+  become: yes  
+
+  tasks:
+    - name: Run ls on remote servers
+      command: ls -la /
+      register: output
+  
+    - name: Visualize output
+      debug:
+        msg: "{{ output }}"

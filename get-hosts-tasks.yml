@@ -1,0 +1,20 @@
+###
+# Determine IP address of azure VM
+###
+---
+    - name: Get IP address of azure VM
+      azure_rm_publicipaddress_info:
+        resource_group: ansible-rg
+      with_items: "{{ inventory_hostname }}"
+      register: output
+
+    - name: Dump output
+      debug:
+        var: output
+
+    - name: Adding public IP to hosts
+      add_host:
+        hostname: "{{ item.ip_address }}"
+        groups: centosservers
+      with_items:
+      - "{{ output.results[0].publicipaddresses }}"
