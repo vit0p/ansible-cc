@@ -1,6 +1,7 @@
 - name: Get dynamic host list
   hosts: localhost
   connection: local
+  gather_facts: no
   tasks:
   - include: get-hosts-tasks.yml
 
