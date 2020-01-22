@@ -11,14 +11,23 @@
   gather_facts: no
   tasks:
     - name: Make .docker-{{ inventory_hostname }} directory for docker certs
-      local_action: file path='./.docker-{{ inventory_hostname }}' state='directory'
+      file:
+        path: './.docker-{{ inventory_hostname }}'
+        state: 'directory'
+      delegate_to: localhost
 
     - name: Make .docker-{{ inventory_hostname }}/client.rc file
-      local_action: file path='./.docker-{{ inventory_hostname }}/client.rc' state='touch'
+      file:
+        path: './.docker-{{ inventory_hostname }}/client.rc'
+        state: 'touch'
+      delegate_to: localhost
 
     - name: Add Environment variables to .docker-{{ inventory_hostname }}/client.rc
-      local_action: lineinfile dest='./.docker-{{ inventory_hostname }}/client.rc' line='export DOCKER_TLS_VERIFY=1\nexport DOCKER_CERT_PATH=./.docker-{{ inventory_hostname }}/\nexport DOCKER_HOST=tcp://{{ inventory_hostname }}:2376\n' state='present'
-
+      lineinfile:
+        dest: './.docker-{{ inventory_hostname }}/client.rc'
+        line: 'export DOCKER_TLS_VERIFY=1\nexport DOCKER_CERT_PATH=./.docker-{{ inventory_hostname }}/\nexport DOCKER_HOST=tcp://{{ inventory_hostname }}:2376\n'
+        state: 'present'
+      delegate_to: localhost
 
 - name: Docker Daemon Set up
   hosts: centosservers
@@ -64,7 +73,8 @@
         state: absent
 
     - name: Reload Docker daemon
-      command: systemctl daemon-reload
-    - name: Restart Docker daemon
-      command: systemctl restart docker.service
+      systemd:
+        name: docker
+        state: restarted
+        daemon_reload: yes
 
