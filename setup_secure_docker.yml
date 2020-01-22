@@ -25,7 +25,10 @@
     - name: Add Environment variables to .docker-{{ inventory_hostname }}/client.rc
       lineinfile:
         dest: './.docker-{{ inventory_hostname }}/client.rc'
-        line: 'export DOCKER_TLS_VERIFY=1\nexport DOCKER_CERT_PATH=./.docker-{{ inventory_hostname }}/\nexport DOCKER_HOST=tcp://{{ inventory_hostname }}:2376\n'
+        line: >-
+          'export DOCKER_TLS_VERIFY=1\nexport 
+          DOCKER_CERT_PATH=./.docker-{{ inventory_hostname }}/\nexport 
+          DOCKER_HOST=tcp://{{ inventory_hostname }}:2376\n'
         state: 'present'
       delegate_to: localhost
 
@@ -65,7 +68,9 @@
       lineinfile:
         dest: /usr/lib/systemd/system/docker.service
         regexp: "ExecStart=/usr/bin/dockerd -H fd://"
-        line: ExecStart=/usr/bin/dockerd -H fd:// --tlsverify --tlscacert=/etc/docker/ca.pem --tlscert=/etc/docker/server-cert.pem --tlskey=/etc/docker/server-key.pem -H=0.0.0.0:2376 --containerd=/run/containerd/containerd.sock
+        line: >- 
+          ExecStart=/usr/bin/dockerd -H fd:// --tlsverify --tlscacert=/etc/docker/ca.pem --tlscert=/etc/docker/server-cert.pem 
+          --tlskey=/etc/docker/server-key.pem -H=0.0.0.0:2376 --containerd=/run/containerd/containerd.sock
 
     - name: Remove client certs from daemon host
       file:
