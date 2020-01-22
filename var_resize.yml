@@ -9,6 +9,7 @@
   connection: local
   tasks:
   - include: get-hosts-tasks.yml
+    when: groups.centosservers is not defined
 
 - name: Gather facts
   hosts: centosservers
