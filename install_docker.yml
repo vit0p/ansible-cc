@@ -1,0 +1,19 @@
+###
+# initial source
+###
+---
+
+- name: Get dynamic host list
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+  - include: get-hosts-tasks.yml
+
+# Creates a dynamic inventory of hosts where install docker
+- name: Gather facts
+  hosts: centosservers
+  remote_user: azureuser
+  become: yes
+  roles:
+    - geerlingguy.docker

@@ -5,4 +5,6 @@ install:
 script:
   - ansible-lint azure_vm.yml get-hosts-tasks.yml
   - ansible-lint var_resize.yml
-  
+  - ansible-lint install_docker.yml
+  - ansible-lint setup_secure_docker.yml
+
